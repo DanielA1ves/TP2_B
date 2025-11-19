@@ -1,0 +1,17 @@
+# Dependências do projeto TP2-B
+# Sistema de Integração com XML-RPC e gRPC
+
+# Processamento de XML
+lxml>=4.9.0
+xmlschema>=2.0.0
+
+# Data Processing
+pandas>=2.0.0
+
+# gRPC (para implementação futura)
+grpcio>=1.50.0
+grpcio-tools>=1.50.0
+protobuf>=4.21.0
+
+# Docker Compose support (documentação)
+# docker-compose>=1.29.0

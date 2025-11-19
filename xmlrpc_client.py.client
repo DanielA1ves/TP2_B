@@ -1,0 +1,97 @@
+import xmlrpc.client
+
+class XMLRPCClient:
+    def __init__(self, host='localhost', port=8000):
+        self.server = xmlrpc.client.ServerProxy(f'http://{host}:{port}')
+        print(f"Cliente conectado ao servidor {host}:{port}")
+    
+    def test_xpath_queries(self):
+        """Testa várias queries XPath"""
+        print("\n=== TESTES XPATH ===")
+        
+        # Contar registos
+        print("\n1. Contando registos totais:")
+        count = self.server.count_records()
+        print(f"   Total: {count} registos")
+        
+        # Buscar todos os preços
+        print("\n2. Buscando todos os preços (//Price/text()):")
+        prices = self.server.execute_xpath('//Price/text()')
+        if isinstance(prices, list):
+            print(f"   Encontrados {len(prices)} preços")
+            print(f"   Primeiros 3: {prices[:3]}")
+        
+        # Buscar casas com mais de 3 quartos
+        print("\n3. Casas com mais de 3 quartos (//record[Bedrooms > 3]):")
+        result = self.server.execute_xpath('//record[Bedrooms > 3]')
+        if isinstance(result, list):
+            print(f"   Encontradas {len(result)} casas")
+        
+        # Buscar por localização específica
+        print("\n4. Buscar casas numa localização (//Location/text()):")
+        locations = self.server.execute_xpath('//Location/text()')
+        if isinstance(locations, list):
+            unique_locations = list(set(locations))[:5]
+            print(f"   Localizações encontradas: {unique_locations}")
+    
+    def test_record_operations(self):
+        """Testa operações com registos individuais"""
+        print("\n=== TESTES DE REGISTOS ===")
+        
+        # Buscar registo por ID
+        print("\n1. Buscar registo por ID (id=1):")
+        record = self.server.get_record_by_id('1')
+        print(f"   {record[:200]}..." if len(record) > 200 else f"   {record}")
+        
+        # Buscar todos os registos (limitado)
+        print("\n2. Buscar primeiros registos:")
+        all_records = self.server.get_all_records()
+        if isinstance(all_records, list):
+            print(f"   Total de registos: {len(all_records)}")
+            if all_records:
+                print(f"   Primeiro registo: {all_records[0][:150]}...")
+    
+    def interactive_mode(self):
+        """Modo interativo para queries personalizadas"""
+        print("\n=== MODO INTERATIVO ===")
+        print("Digite 'sair' para terminar\n")
+        
+        while True:
+            query = input("Digite uma query XPath: ")
+            if query.lower() == 'sair':
+                break
+            
+            try:
+                result = self.server.execute_xpath(query)
+                if isinstance(result, list):
+                    print(f"Resultado ({len(result)} itens):")
+                    for i, item in enumerate(result[:5]):
+                        print(f"  [{i}]: {item}")
+                    if len(result) > 5:
+                        print(f"  ... e mais {len(result) - 5} itens")
+                else:
+                    print(f"Resultado: {result}")
+            except Exception as e:
+                print(f"Erro: {e}")
+
+def main():
+    """Função principal para demonstração"""
+    try:
+        client = XMLRPCClient()
+        
+        # Executar testes automáticos
+        client.test_xpath_queries()
+        client.test_record_operations()
+        
+        # Modo interativo (comentado por padrão)
+        # client.interactive_mode()
+        
+    except ConnectionRefusedError:
+        print("Erro: Não foi possível conectar ao servidor.")
+        print("Certifica-te de que o servidor XML-RPC está a correr.")
+        print("Executa: python xmlrpc_server.py")
+    except Exception as e:
+        print(f"Erro: {e}")
+
+if __name__ == '__main__':
+    main()
