@@ -1,0 +1,16 @@
+# Ficheiros gerados automaticamente
+*.xml
+*.xsd
+*.csv
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
