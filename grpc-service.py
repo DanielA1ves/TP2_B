@@ -11,7 +11,6 @@ import property_service_pb2_grpc as pb2_grpc
 class PropertyServicer(pb2_grpc.PropertyServiceServicer):
     def __init__(self, xml_path):
         self.xml_path = xml_path
-        # Carregar o XML apenas uma vez no construtor
         try:
             self.tree = etree.parse(xml_path)
             self.root = self.tree.getroot()

@@ -1,52 +1,47 @@
 version: '3.8'
 
 services:
-  # 1. Serviço para preparar o XML e XSD (corre primeiro)
+  # 1. Serviço para preparar o XML, XSD e validar
   builder:
-    # Usa o Dockerfile no diretório atual
     build: .
-    image: system_integration_app # Nome da imagem base
+    image: system_integration_app
     container_name: xml_builder
-    # Monta um volume partilhado para o XML/XSD
     volumes:
       - xml_data:/app
-    # Executa os scripts que geram os ficheiros XML e XSD
     command: sh -c "python xml_converter.py && python schema_creator.py && python validator.py"
-    # Healthcheck para garantir que o XML existe antes de avançar para o servidor
     healthcheck:
       test: ["CMD-SHELL", "test -f house_purchase.xml"]
       interval: 5s
       timeout: 3s
       retries: 5
 
-  # 2. Servidor gRPC (corre depois do builder)
-  grpc_server:
+  # 2. Servidor gRPC (NOVO NOME)
+  grpc-service:
     build: .
     image: system_integration_app
-    container_name: grpc_server
+    container_name: grpc-service
     volumes:
-      - xml_data:/app # Acede ao XML gerado
+      - xml_data:/app
     ports:
-      - "50051:50051" # Expor a porta gRPC
-    # Garante que o XML está pronto e o container 'builder' está saudável
+      - "50051:50051"
     depends_on:
       builder:
         condition: service_healthy
-    command: python grpc_server.py # Inicia o servidor gRPC
+    command: python grpc-service.py
 
-  # 3. Cliente gRPC (corre depois do servidor)
-  grpc_client:
+  # 3. Cliente gRPC (NOVO NOME)
+  grpc-client:
     build: .
     image: system_integration_app
     container_name: grpc_client
     volumes:
       - xml_data:/app
-    # Depende do servidor estar a correr (service_started)
+    # Depende do NOVO NOME do serviço
     depends_on:
-      grpc_server:
+      grpc-service:
         condition: service_started
-    command: python grpc_client.py # Executa os testes RPC
-    # Para o container sair após a execução do cliente
+    # Removido o sleep, pois agora está no código Python
+    command: python grpc_client.py
     restart: "no"
 
 volumes:
