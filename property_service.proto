@@ -1,0 +1,31 @@
+syntax = "proto3";
+
+// Define o serviço
+service PropertyService {
+  rpc GetRecordByID (RecordRequest) returns (RecordResponse);
+  rpc CountRecords (Empty) returns (CountResponse);
+  rpc ExecuteXPath (QueryRequest) returns (QueryResponse);
+}
+
+// Mensagens
+message Empty {} // Para pedidos sem argumentos
+
+message RecordRequest {
+  int32 property_id = 1;
+}
+
+message CountResponse {
+  int32 count = 1;
+}
+
+message QueryRequest {
+  string query = 1;
+}
+
+message QueryResponse {
+  repeated string results = 1; // Retorna uma lista de strings
+}
+
+message RecordResponse {
+  string record_xml = 1; // Retorna o XML do registo como string
+}
