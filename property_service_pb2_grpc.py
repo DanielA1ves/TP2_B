@@ -35,6 +35,11 @@ class PropertyServiceStub(object):
         Args:
             channel: A grpc.Channel.
         """
+        self.UploadData = channel.unary_unary(
+                '/PropertyService/UploadData',
+                request_serializer=property__service__pb2.UploadRequest.SerializeToString,
+                response_deserializer=property__service__pb2.UploadResponse.FromString,
+                _registered_method=True)
         self.GetRecordByID = channel.unary_unary(
                 '/PropertyService/GetRecordByID',
                 request_serializer=property__service__pb2.RecordRequest.SerializeToString,
@@ -55,6 +60,12 @@ class PropertyServiceStub(object):
 class PropertyServiceServicer(object):
     """Define o serviço
     """
+
+    def UploadData(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
 
     def GetRecordByID(self, request, context):
         """Missing associated documentation comment in .proto file."""
@@ -77,6 +88,11 @@ class PropertyServiceServicer(object):
 
 def add_PropertyServiceServicer_to_server(servicer, server):
     rpc_method_handlers = {
+            'UploadData': grpc.unary_unary_rpc_method_handler(
+                    servicer.UploadData,
+                    request_deserializer=property__service__pb2.UploadRequest.FromString,
+                    response_serializer=property__service__pb2.UploadResponse.SerializeToString,
+            ),
             'GetRecordByID': grpc.unary_unary_rpc_method_handler(
                     servicer.GetRecordByID,
                     request_deserializer=property__service__pb2.RecordRequest.FromString,
@@ -103,6 +119,33 @@ def add_PropertyServiceServicer_to_server(servicer, server):
 class PropertyService(object):
     """Define o serviço
     """
+
+    @staticmethod
+    def UploadData(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/PropertyService/UploadData',
+            property__service__pb2.UploadRequest.SerializeToString,
+            property__service__pb2.UploadResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
 
     @staticmethod
     def GetRecordByID(request,

@@ -1,48 +1,29 @@
-version: '3.8'
-
 services:
-  # 1. Serviço para preparar o XML, XSD e validar
-  builder:
+  server:
     build: .
     image: system_integration_app
-    container_name: xml_builder
+    container_name: server
     volumes:
-      - xml_data:/app
-    command: sh -c "python xml_converter.py && python schema_creator.py && python validator.py"
-    healthcheck:
-      test: ["CMD-SHELL", "test -f house_purchase.xml"]
-      interval: 5s
-      timeout: 3s
-      retries: 5
-
-  # 2. Servidor gRPC (NOVO NOME)
-  grpc-service:
-    build: .
-    image: system_integration_app
-    container_name: grpc-service
-    volumes:
-      - xml_data:/app
+      - .:/app
     ports:
       - "50051:50051"
-    depends_on:
-      builder:
-        condition: service_healthy
-    command: python grpc-service.py
+      - "8000:8000"
+    environment:
+      - MAX_ROWS=150000
+      - CHUNK_SIZE=50000
+    command: python server.py
 
-  # 3. Cliente gRPC (NOVO NOME)
-  grpc-client:
+  client:
     build: .
     image: system_integration_app
-    container_name: grpc_client
+    container_name: client
     volumes:
-      - xml_data:/app
-    # Depende do NOVO NOME do serviço
+      - .:/app
     depends_on:
-      grpc-service:
+      server:
         condition: service_started
-    # Removido o sleep, pois agora está no código Python
-    command: python grpc_client.py
+    environment:
+      - MAX_ROWS=150000
+      - CHUNK_SIZE=50000
+    command: python client.py
     restart: "no"
-
-volumes:
-  xml_data:

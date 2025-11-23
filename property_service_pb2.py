@@ -24,7 +24,7 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x16property_service.proto\"\x07\n\x05\x45mpty\"$\n\rRecordRequest\x12\x13\n\x0bproperty_id\x18\x01 \x01(\x05\"\x1e\n\rCountResponse\x12\r\n\x05\x63ount\x18\x01 \x01(\x05\"\x1d\n\x0cQueryRequest\x12\r\n\x05query\x18\x01 \x01(\t\" \n\rQueryResponse\x12\x0f\n\x07results\x18\x01 \x03(\t\"$\n\x0eRecordResponse\x12\x12\n\nrecord_xml\x18\x01 \x01(\t2\x9a\x01\n\x0fPropertyService\x12\x30\n\rGetRecordByID\x12\x0e.RecordRequest\x1a\x0f.RecordResponse\x12&\n\x0c\x43ountRecords\x12\x06.Empty\x1a\x0e.CountResponse\x12-\n\x0c\x45xecuteXPath\x12\r.QueryRequest\x1a\x0e.QueryResponseb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x16property_service.proto\"\x07\n\x05\x45mpty\"3\n\rUploadRequest\x12\x10\n\x08xml_data\x18\x01 \x01(\t\x12\x10\n\x08xsd_data\x18\x02 \x01(\t\"-\n\x0eUploadResponse\x12\n\n\x02ok\x18\x01 \x01(\x08\x12\x0f\n\x07message\x18\x02 \x01(\t\"$\n\rRecordRequest\x12\x13\n\x0bproperty_id\x18\x01 \x01(\x05\"\x1e\n\rCountResponse\x12\r\n\x05\x63ount\x18\x01 \x01(\x05\"\x1d\n\x0cQueryRequest\x12\r\n\x05query\x18\x01 \x01(\t\" \n\rQueryResponse\x12\x0f\n\x07results\x18\x01 \x03(\t\"$\n\x0eRecordResponse\x12\x12\n\nrecord_xml\x18\x01 \x01(\t2\xc9\x01\n\x0fPropertyService\x12-\n\nUploadData\x12\x0e.UploadRequest\x1a\x0f.UploadResponse\x12\x30\n\rGetRecordByID\x12\x0e.RecordRequest\x1a\x0f.RecordResponse\x12&\n\x0c\x43ountRecords\x12\x06.Empty\x1a\x0e.CountResponse\x12-\n\x0c\x45xecuteXPath\x12\r.QueryRequest\x1a\x0e.QueryResponseb\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -33,16 +33,20 @@ if not _descriptor._USE_C_DESCRIPTORS:
   DESCRIPTOR._loaded_options = None
   _globals['_EMPTY']._serialized_start=26
   _globals['_EMPTY']._serialized_end=33
-  _globals['_RECORDREQUEST']._serialized_start=35
-  _globals['_RECORDREQUEST']._serialized_end=71
-  _globals['_COUNTRESPONSE']._serialized_start=73
-  _globals['_COUNTRESPONSE']._serialized_end=103
-  _globals['_QUERYREQUEST']._serialized_start=105
-  _globals['_QUERYREQUEST']._serialized_end=134
-  _globals['_QUERYRESPONSE']._serialized_start=136
-  _globals['_QUERYRESPONSE']._serialized_end=168
-  _globals['_RECORDRESPONSE']._serialized_start=170
-  _globals['_RECORDRESPONSE']._serialized_end=206
-  _globals['_PROPERTYSERVICE']._serialized_start=209
-  _globals['_PROPERTYSERVICE']._serialized_end=363
+  _globals['_UPLOADREQUEST']._serialized_start=35
+  _globals['_UPLOADREQUEST']._serialized_end=86
+  _globals['_UPLOADRESPONSE']._serialized_start=88
+  _globals['_UPLOADRESPONSE']._serialized_end=133
+  _globals['_RECORDREQUEST']._serialized_start=135
+  _globals['_RECORDREQUEST']._serialized_end=171
+  _globals['_COUNTRESPONSE']._serialized_start=173
+  _globals['_COUNTRESPONSE']._serialized_end=203
+  _globals['_QUERYREQUEST']._serialized_start=205
+  _globals['_QUERYREQUEST']._serialized_end=234
+  _globals['_QUERYRESPONSE']._serialized_start=236
+  _globals['_QUERYRESPONSE']._serialized_end=268
+  _globals['_RECORDRESPONSE']._serialized_start=270
+  _globals['_RECORDRESPONSE']._serialized_end=306
+  _globals['_PROPERTYSERVICE']._serialized_start=309
+  _globals['_PROPERTYSERVICE']._serialized_end=510
 # @@protoc_insertion_point(module_scope)

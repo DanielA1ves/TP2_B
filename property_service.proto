@@ -2,6 +2,7 @@ syntax = "proto3";
 
 // Define o serviço
 service PropertyService {
+  rpc UploadData (UploadRequest) returns (UploadResponse);
   rpc GetRecordByID (RecordRequest) returns (RecordResponse);
   rpc CountRecords (Empty) returns (CountResponse);
   rpc ExecuteXPath (QueryRequest) returns (QueryResponse);
@@ -9,6 +10,16 @@ service PropertyService {
 
 // Mensagens
 message Empty {} // Para pedidos sem argumentos
+
+message UploadRequest {
+  string xml_data = 1;
+  string xsd_data = 2;
+}
+
+message UploadResponse {
+  bool ok = 1;
+  string message = 2;
+}
 
 message RecordRequest {
   int32 property_id = 1;
