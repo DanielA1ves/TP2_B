@@ -5,7 +5,6 @@ import pandas as pd
 DEFAULT_CANDIDATES = [
     "global_house_purchase_dataset.csv",
     "global_commodity_trade_statistics.csv",
-    "trades.csv",
 ]
 
 

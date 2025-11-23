@@ -18,7 +18,6 @@ def resolve_csv() -> str:
     for candidate in [
         "global_house_purchase_dataset.csv",
         "global_commodity_trade_statistics.csv",
-        "trades.csv",
     ]:
         if os.path.exists(candidate):
             return candidate
@@ -37,7 +36,7 @@ def auto_infer_config(csv_path: str):
         elif "id" in df.columns:
             id_column = "id"
         else:
-            id_column = "id"  # será criado se não existir
+            id_column = "id"
 
     root_tag = os.getenv("ROOT_TAG")
     item_tag = os.getenv("ITEM_TAG")
@@ -125,7 +124,6 @@ def upload_and_test():
     csv_path = resolve_csv()
     cfg = auto_infer_config(csv_path)
 
-    # Caminhos de saída
     xml_out = cfg.get("xml_out", "house_purchase.xml")
     xsd_out = cfg.get("xsd_out", "house_purchase.xsd")
 
@@ -174,7 +172,7 @@ def upload_and_test():
 
         print(f"\n3. XPath - query ({cfg['xpath_query']}):")
         results = stub.ExecuteXPath(pb2.QueryRequest(query=cfg["xpath_query"]))
-        print(f"   Resultados (até 3): {results.results[:3]}")
+        print(f"   Resultados: {results.results[:3]}")
 
 
 if __name__ == "__main__":

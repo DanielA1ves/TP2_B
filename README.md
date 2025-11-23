@@ -9,6 +9,8 @@ Este projeto utiliza o dataset **Global House Purchase Decision** do Kaggle.
 
 > Nota: o ficheiro CSV não está incluído no repositório devido ao tamanho (>100MB).
 
+Alternativa suportada: **Global Commodity Trade Statistics** ([link](https://www.kaggle.com/datasets/unitednations/global-commodity-trade-statistics)). Coloca o ficheiro `commodity_trade_statistics_data.csv` na raiz; o cliente deteta e usa automaticamente se for o único CSV presente.
+
 ## Arquitetura atual
 - **Servidor único** (`server`):
   - gRPC na porta `50051` com métodos `UploadData`, `CountRecords`, `GetRecordByID`, `ExecuteXPath`.
