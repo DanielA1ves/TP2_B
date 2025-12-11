@@ -79,8 +79,14 @@ def auto_infer_config(csv_path: str):
             cfg["xml_out"] = "trade_statistics.xml"
             cfg["xsd_out"] = "trade_statistics.xsd"
         else:
-            cfg["xml_out"] = "house_purchase.xml"
-            cfg["xsd_out"] = "house_purchase.xsd"
+            # Derive from CSV name instead of default "house_purchase"
+            base_name = os.path.splitext(os.path.basename(csv_path))[0]
+            cfg["xml_out"] = f"{base_name}.xml"
+            cfg["xsd_out"] = f"{base_name}.xsd"
+            # Fallback for old default if empty
+            if not base_name: 
+                cfg["xml_out"] = "house_purchase.xml"
+                cfg["xsd_out"] = "house_purchase.xsd"
     return cfg
 
 
@@ -93,8 +99,13 @@ def generate_and_validate(cfg):
             xml_out = "trade_statistics.xml"
             xsd_out = "trade_statistics.xsd"
         else:
-            xml_out = "house_purchase.xml"
-            xsd_out = "house_purchase.xsd"
+            # Derive from CSV name
+            base_name = os.path.splitext(os.path.basename(cfg["csv_path"]))[0]
+            xml_out = f"{base_name}.xml"
+            xsd_out = f"{base_name}.xsd"
+            if not base_name:
+                xml_out = "house_purchase.xml"
+                xsd_out = "house_purchase.xsd"
 
     xml_converter.generate_xml(
         cfg["csv_path"],
@@ -111,6 +122,7 @@ def generate_and_validate(cfg):
     schema = xmlschema.XMLSchema(xsd_out)
     xml_resource = xmlschema.XMLResource(xml_out, lazy=True)
     if not schema.is_valid(xml_resource):
+        # Para debug, ver logs anteriores ou ativar utils.debug
         raise ValueError("XML gerado localmente não é válido.")
 
     with open(xml_out, "r", encoding="utf-8") as f:

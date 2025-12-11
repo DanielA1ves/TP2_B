@@ -1,6 +1,7 @@
 import glob
 import os
 import pandas as pd
+import utils
 
 DEFAULT_CANDIDATES = [
     "global_house_purchase_dataset.csv",
@@ -78,11 +79,13 @@ def generate_xsd(
 '''
 
     xsd_fields = ""
+    tag_map = utils.get_unique_tag_map(df.columns)
     for col in df.columns:
         if col == id_column:
             continue
         field_type = python_to_xsd(str(df[col].dtype))
-        xsd_fields += f'              <xs:element name="{col}" type="{field_type}" minOccurs="0"/>\n'
+        sanitized_name = tag_map[col]
+        xsd_fields += f'              <xs:element name="{sanitized_name}" type="{field_type}" minOccurs="0"/>\n'
 
     with open(xsd_path, "w", encoding="utf-8") as f:
         f.write(xsd_start + xsd_fields + xsd_end)

@@ -1,7 +1,7 @@
-import glob
 import os
 import pandas as pd
 from xml.sax.saxutils import escape
+import utils
 
 
 DEFAULT_CANDIDATES = [
@@ -59,17 +59,37 @@ def generate_xml(
             if file_size > 200 * 1024 * 1024:
                 chunk_size = 50000
 
+    tag_map = {}
+
     def write_rows(df_chunk, start_index, writer, rt, it, ia):
         df_chunk[id_column] = range(start_index, start_index + len(df_chunk))
+        # Ensure consistent column ordering for map integrity if processed in chunks
         cols_local = [id_column] + [c for c in df_chunk.columns if c != id_column]
         df_chunk = df_chunk[cols_local]
+        
+        nonlocal tag_map
+        if not tag_map:
+             tag_map = utils.get_unique_tag_map(df_chunk.columns)
+
         for _, row in df_chunk.iterrows():
-            elements = [f"<{col}>{escape(str(row[col]))}</{col}>" for col in df_chunk.columns if col != id_column]
+            elements = []
+            for col in df_chunk.columns:
+                if col == id_column:
+                    continue
+                tag = tag_map[col]
+                # clean value and escape
+                val = utils.clean_xml_value(row[col])
+                elements.append(f"<{tag}>{escape(val)}</{tag}>")
+            
             elements_str = "".join(elements)
-            writer.write(f'<{it} {ia}="{escape(str(row[id_column]))}">{elements_str}</{it}>\n')
+            # clean id attribute too
+            # Force integer cast to avoid '1.0' float formatting which violates xs:integer
+            id_val = utils.clean_xml_value(int(row[id_column]))
+            writer.write(f'<{it} {ia}="{escape(id_val)}">{elements_str}</{it}>\n')
         return start_index + len(df_chunk)
 
     with open(xml_path, "w", encoding="utf-8") as f:
+        f.write('<?xml version="1.0" encoding="UTF-8"?>\n')
         total_written = 1
         if chunk_size:
             reader = pd.read_csv(csv_path, encoding="utf-8", chunksize=chunk_size, low_memory=False)
